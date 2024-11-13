@@ -7,26 +7,38 @@ export default function CallFlowControl() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    updateTime();
-    const timeInterval = setInterval(updateTime, 1000);
+    // Initialize the time display when the component mounts
+    const currentTimeElement = document.getElementById('currentTime');
+    if (currentTimeElement) {
+      currentTimeElement.textContent = new Date().toLocaleTimeString();
+    }
+
+    const timeInterval = setInterval(() => {
+      if (currentTimeElement) {
+        currentTimeElement.textContent = new Date().toLocaleTimeString();
+      }
+    }, 1000);
+
     return () => clearInterval(timeInterval);
   }, []);
-
-  // Function to update the time
-  const updateTime = () => {
-    const now = new Date();
-    document.getElementById('currentTime').textContent = now.toLocaleTimeString();
-  };
 
   // Function to handle Start and Pause
   const handleToggle = async (newState) => {
     setError(null);
     try {
-      // Call your existing API function
+      // Call the API function from your ringbaApi.js
       const response = await updateTargetStatus(newState);
       if (!response) throw new Error('Failed to update status');
+
+      // Set the active state and update the UI accordingly
       setIsActive(newState);
       showSystemStatus(newState ? 'System Activated' : 'System Paused');
+
+      // Activate or deactivate energy field visuals
+      const energyField = document.getElementById('energyField');
+      if (energyField) {
+        energyField.classList.toggle('active', newState);
+      }
     } catch (err) {
       setError(err.message);
     }
@@ -34,10 +46,12 @@ export default function CallFlowControl() {
 
   // Function to show system status
   const showSystemStatus = (message) => {
-    const status = document.getElementById('systemStatus');
-    status.textContent = message;
-    status.classList.add('active');
-    setTimeout(() => status.classList.remove('active'), 2000);
+    const statusElement = document.getElementById('systemStatus');
+    if (statusElement) {
+      statusElement.textContent = message;
+      statusElement.classList.add('active');
+      setTimeout(() => statusElement.classList.remove('active'), 2000);
+    }
   };
 
   return (
