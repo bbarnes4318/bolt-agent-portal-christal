@@ -3,23 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --primary: #FF8200;
+  --primary: #ff8200;
+  --secondary: #d3d3d3;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-.button {
-  @apply px-6 py-3 rounded-lg font-medium transition-colors;
+  @apply bg-gray-50 font-sans;
 }
 
 .button-primary {
-  @apply bg-[#FF8200] text-white hover:bg-opacity-90;
+  @apply px-6 py-3 bg-[#ff8200] text-white rounded-lg shadow hover:shadow-lg;
 }
 
 .button-secondary {
-  @apply bg-gray-100 text-gray-600 hover:bg-gray-200;
+  @apply px-6 py-3 bg-gray-300 text-gray-700 rounded-lg shadow hover:shadow-md;
 }
