@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import clsx from 'clsx';
-import logo from 'src/assets/400x120.png';
+import logo from '/400x120.png'; // Assuming image is now in the `public` directory
 
 export default function CallFlowControl({ isActive, onToggle }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +31,6 @@ export default function CallFlowControl({ isActive, onToggle }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
       <img src={logo} alt="Leadzer Logo" className="w-40 mb-6" />
-      
       <div className="bg-white rounded-lg shadow-lg p-6 w-80 text-center">
         <div className="space-x-4">
           <button
@@ -55,7 +54,7 @@ export default function CallFlowControl({ isActive, onToggle }) {
             {isLoading ? "Loading..." : "Pause"}
           </button>
         </div>
-        
+
         <div className="text-lg mt-4">
           Status:{" "}
           <span className={isActive ? "text-green-600" : "text-gray-600"}>
