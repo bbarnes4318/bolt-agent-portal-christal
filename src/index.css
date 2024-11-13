@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #FF8200;
+}
+
+body {
+  @apply bg-gray-50;
+}
