@@ -7,50 +7,41 @@ export default function CallFlowControl() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Function to update the time display
-    const updateTime = () => {
-      const now = new Date();
-      const currentTimeElement = document.getElementById('currentTime');
-      if (currentTimeElement) {
-        currentTimeElement.textContent = now.toLocaleTimeString();
-      }
-    };
-
-    // Initialize the time display and set an interval to update it
     updateTime();
     const timeInterval = setInterval(updateTime, 1000);
     return () => clearInterval(timeInterval);
   }, []);
 
-  // Function to handle Start and Pause actions
+  // Function to update the time
+  const updateTime = () => {
+    const now = new Date();
+    const timeElement = document.getElementById('currentTime');
+    if (timeElement) {
+      timeElement.textContent = now.toLocaleTimeString();
+    }
+  };
+
+  // Function to handle Start and Pause
   const handleToggle = async (newState) => {
     setError(null);
     try {
-      // Call the API function to update the target status
+      // Call Ringba API
       const response = await updateTargetStatus(newState);
       if (!response) throw new Error('Failed to update status');
-
-      // Update the active state and show system status
       setIsActive(newState);
       showSystemStatus(newState ? 'System Activated' : 'System Paused');
-
-      // Toggle the energy field visuals
-      const energyField = document.getElementById('energyField');
-      if (energyField) {
-        energyField.classList.toggle('active', newState);
-      }
     } catch (err) {
       setError(err.message);
     }
   };
 
-  // Function to show system status with animation
+  // Function to show system status
   const showSystemStatus = (message) => {
-    const statusElement = document.getElementById('systemStatus');
-    if (statusElement) {
-      statusElement.textContent = message;
-      statusElement.classList.add('active');
-      setTimeout(() => statusElement.classList.remove('active'), 2000);
+    const status = document.getElementById('systemStatus');
+    if (status) {
+      status.textContent = message;
+      status.classList.add('active');
+      setTimeout(() => status.classList.remove('active'), 2000);
     }
   };
 
@@ -74,7 +65,7 @@ export default function CallFlowControl() {
           className="btn"
           onClick={() => handleToggle(true)}
           disabled={isActive}
-          style={{ opacity: isActive ? '0.7' : '1' }}
+          style={{ opacity: isActive ? '0.7' : '1', pointerEvents: 'auto', zIndex: 10 }}
         >
           Start Lead Flow
         </button>
@@ -82,7 +73,7 @@ export default function CallFlowControl() {
           className="btn"
           onClick={() => handleToggle(false)}
           disabled={!isActive}
-          style={{ background: '#333', opacity: !isActive ? '0.7' : '1' }}
+          style={{ background: '#333', opacity: !isActive ? '0.7' : '1', pointerEvents: 'auto', zIndex: 10 }}
         >
           Pause System
         </button>
