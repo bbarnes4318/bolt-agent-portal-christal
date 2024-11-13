@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 const API_TOKEN = "09f0c9f0ce65fca7fd49064ab10d2bac546768a83f994109e4c7ff148297934dd40a060c15972a26959daf9e5d11ec27d5fcd55a123ee3fc5c1297b15efafd8c2d791d62cebe5c77232e80b8e44b54059313a1e37cc598a5d75245cc6e43e7e864e7ba91131e520c96fb55efeb13fe738b136fa9";
 const ACCOUNT_ID = "RAa6a071b5a752499d966c5695492b26a0";
-const TARGET_ID = "TA540227dd15a24f0ab2ad5453ac8fc5cb";
+const TARGET_ID = "TA540227dd15a24f0ab2ad5453ac8fc5cb"; // Correct TARGET_ID
 const BASE_URL = "https://api.ringba.com/v2";
 
 app.use(cors());
