@@ -19,13 +19,40 @@ app.use(express.static('dist'));
 app.get('/api/calllogs', async (req, res) => {
   try {
     console.log('Fetching call logs...');
-    const response = await fetch(`${BASE_URL}/${ACCOUNT_ID}/calllogs`, {
-      method: 'GET',
+    const response = await fetch(`${BASE_URL}/${ACCOUNT_ID}/calllogs/query`, {
+      method: 'POST',
       headers: {
         'Authorization': `Token ${API_TOKEN}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        columns: [
+          "callDt",
+          "buyer",
+          "targetName",
+          "inboundPhoneNumber",
+          "callLengthInSeconds",
+          "hasConverted",
+          "recordingUrl"
+        ],
+        filter: {
+          targetId: TARGET_ID,
+          dateRange: {
+            start: "2024-01-01T00:00:00Z",
+            end: "2024-11-12T23:59:59Z"
+          }
+        },
+        sortBy: [
+          {
+            column: "callDt",
+            direction: "desc"
+          }
+        ],
+        page: {
+          size: 10,
+          number: 1
+        }
+      })
     });
 
     if (!response.ok) {
@@ -52,8 +79,7 @@ app.post('/api/target/status', async (req, res) => {
       method: 'PATCH',
       headers: {
         'Authorization': `Token ${API_TOKEN}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({ enabled })
     });
@@ -71,6 +97,11 @@ app.post('/api/target/status', async (req, res) => {
     console.error('Error updating target status:', error);
     res.status(500).json({ error: error.message });
   }
+});
+
+// Serve the React app for all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(PORT, () => {
