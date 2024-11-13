@@ -9,3 +9,15 @@
 body {
   @apply bg-gray-50;
 }
+
+.button {
+  @apply px-6 py-3 rounded-lg font-medium transition-colors;
+}
+
+.button-primary {
+  @apply bg-primary text-white hover:bg-opacity-90;
+}
+
+.button-secondary {
+  @apply bg-gray-100 text-gray-600 hover:bg-gray-200;
+}
