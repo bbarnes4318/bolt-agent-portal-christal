@@ -7,34 +7,34 @@ export default function CallFlowControl() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Initialize the time display when the component mounts
-    const currentTimeElement = document.getElementById('currentTime');
-    if (currentTimeElement) {
-      currentTimeElement.textContent = new Date().toLocaleTimeString();
-    }
-
-    const timeInterval = setInterval(() => {
+    // Function to update the time display
+    const updateTime = () => {
+      const now = new Date();
+      const currentTimeElement = document.getElementById('currentTime');
       if (currentTimeElement) {
-        currentTimeElement.textContent = new Date().toLocaleTimeString();
+        currentTimeElement.textContent = now.toLocaleTimeString();
       }
-    }, 1000);
+    };
 
+    // Initialize the time display and set an interval to update it
+    updateTime();
+    const timeInterval = setInterval(updateTime, 1000);
     return () => clearInterval(timeInterval);
   }, []);
 
-  // Function to handle Start and Pause
+  // Function to handle Start and Pause actions
   const handleToggle = async (newState) => {
     setError(null);
     try {
-      // Call the API function from your ringbaApi.js
+      // Call the API function to update the target status
       const response = await updateTargetStatus(newState);
       if (!response) throw new Error('Failed to update status');
 
-      // Set the active state and update the UI accordingly
+      // Update the active state and show system status
       setIsActive(newState);
       showSystemStatus(newState ? 'System Activated' : 'System Paused');
 
-      // Activate or deactivate energy field visuals
+      // Toggle the energy field visuals
       const energyField = document.getElementById('energyField');
       if (energyField) {
         energyField.classList.toggle('active', newState);
@@ -44,7 +44,7 @@ export default function CallFlowControl() {
     }
   };
 
-  // Function to show system status
+  // Function to show system status with animation
   const showSystemStatus = (message) => {
     const statusElement = document.getElementById('systemStatus');
     if (statusElement) {
