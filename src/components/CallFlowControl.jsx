@@ -22,7 +22,7 @@ export default function CallFlowControl() {
   const handleToggle = async (newState) => {
     setError(null);
     try {
-      // Call Ringba API
+      // Call your existing API function
       const response = await updateTargetStatus(newState);
       if (!response) throw new Error('Failed to update status');
       setIsActive(newState);
