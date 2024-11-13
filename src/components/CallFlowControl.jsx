@@ -1,69 +1,85 @@
-import { useState } from 'react';
-import clsx from 'clsx';
-import logo from '/400x120.png'; // Assuming image is now in the `public` directory
+// src/components/CallFlowControl.jsx
+import { useState, useEffect } from 'react';
+import { updateTargetStatus } from '../services/ringbaApi';
+import logo from '../assets/400x120.png'; // Adjust the path if necessary
+import '../styles/CustomStyles.css'; // Custom CSS file for styles
 
-export default function CallFlowControl({ isActive, onToggle }) {
-  const [isLoading, setIsLoading] = useState(false);
+export default function CallFlowControl() {
+  const [isActive, setIsActive] = useState(false);
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    updateTime();
+    const timeInterval = setInterval(updateTime, 1000);
+    return () => clearInterval(timeInterval);
+  }, []);
+
+  // Function to update the time
+  const updateTime = () => {
+    const now = new Date();
+    document.getElementById('currentTime').textContent = now.toLocaleTimeString();
+  };
+
+  // Function to handle Start and Pause
   const handleToggle = async (newState) => {
-    setIsLoading(true);
     setError(null);
-
     try {
-      const response = await fetch('/api/target/status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ enabled: newState })
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Failed to update status');
-
-      onToggle(newState);
+      // Call Ringba API
+      const response = await updateTargetStatus(newState);
+      if (!response) throw new Error('Failed to update status');
+      setIsActive(newState);
+      showSystemStatus(newState ? 'System Activated' : 'System Paused');
     } catch (err) {
       setError(err.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
+  // Function to show system status
+  const showSystemStatus = (message) => {
+    const status = document.getElementById('systemStatus');
+    status.textContent = message;
+    status.classList.add('active');
+    setTimeout(() => status.classList.remove('active'), 2000);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <img src={logo} alt="Leadzer Logo" className="w-40 mb-6" />
-      <div className="bg-white rounded-lg shadow-lg p-6 w-80 text-center">
-        <div className="space-x-4">
-          <button
-            onClick={() => handleToggle(true)}
-            disabled={isLoading || isActive}
-            className={clsx(
-              "button-primary transition-all duration-200",
-              isActive ? "opacity-50 cursor-not-allowed" : "hover:bg-opacity-90"
-            )}
-          >
-            {isLoading ? "Loading..." : "Start"}
-          </button>
-          <button
-            onClick={() => handleToggle(false)}
-            disabled={isLoading || !isActive}
-            className={clsx(
-              "button-secondary transition-all duration-200",
-              !isActive ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-200"
-            )}
-          >
-            {isLoading ? "Loading..." : "Pause"}
-          </button>
-        </div>
-
-        <div className="text-lg mt-4">
-          Status:{" "}
-          <span className={isActive ? "text-green-600" : "text-gray-600"}>
-            {isActive ? "Currently Available" : "Paused"}
-          </span>
-        </div>
-
-        {error && <div className="mt-2 text-red-600 text-sm">{error}</div>}
+    <div className="dashboard">
+      <div className="hero-image"></div>
+      <div className="grid-background"></div>
+      <div className="pulse-rings">
+        <div className="pulse-ring"></div>
+        <div className="pulse-ring" style={{ animationDelay: '1s' }}></div>
+        <div className="pulse-ring" style={{ animationDelay: '2s' }}></div>
       </div>
+
+      <div className="header">
+        <img src={logo} alt="ACA Health Insurance Portal Logo" className="logo" width="400" height="120" />
+        <div className="time" id="currentTime"></div>
+      </div>
+
+      <div className="control-buttons">
+        <button
+          className="btn"
+          onClick={() => handleToggle(true)}
+          disabled={isActive}
+          style={{ opacity: isActive ? '0.7' : '1' }}
+        >
+          Start Lead Flow
+        </button>
+        <button
+          className="btn"
+          onClick={() => handleToggle(false)}
+          disabled={!isActive}
+          style={{ background: '#333', opacity: !isActive ? '0.7' : '1' }}
+        >
+          Pause System
+        </button>
+      </div>
+
+      {error && <div className="error-message">{error}</div>}
+
+      <div className="system-status" id="systemStatus"></div>
+      <div className="energy-field" id="energyField"></div>
     </div>
   );
 }
