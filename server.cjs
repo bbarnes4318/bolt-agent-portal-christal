@@ -1,12 +1,7 @@
-import express from 'express';
-import cors from 'cors';
-import fetch from 'node-fetch';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import { createServer } from 'vite';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const express = require('express');
+const cors = require('cors');
+const fetch = require('node-fetch');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -85,7 +80,7 @@ app.post('/api/target/status', async (req, res) => {
 
 // Serve the React app for all other routes
 app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(PORT, () => {
