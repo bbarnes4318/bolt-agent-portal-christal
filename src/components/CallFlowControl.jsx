@@ -51,7 +51,6 @@ export default function CallFlowControl() {
       </div>
 
       <div className="header">
-        {/* Use the image from the public folder */}
         <img src="/400x120.png" alt="ACA Health Insurance Portal Logo" className="logo" width="400" height="120" />
         <div className="time" id="currentTime"></div>
       </div>

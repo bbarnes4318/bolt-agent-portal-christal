@@ -2,6 +2,7 @@
   "name": "bolt-agent-portal",
   "private": true,
   "version": "0.0.0",
+  "type": "module", // Added this line
   "scripts": {
     "dev": "vite",
     "build": "vite build",
