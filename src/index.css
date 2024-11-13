@@ -10,14 +10,34 @@ body {
   @apply bg-gray-50;
 }
 
+.portal-container {
+  @apply max-w-7xl mx-auto bg-white rounded-lg shadow-sm p-6;
+}
+
+.control-section {
+  @apply flex flex-col items-center gap-4 mb-8;
+}
+
 .button {
   @apply px-6 py-3 rounded-lg font-medium transition-colors;
 }
 
 .button-primary {
-  @apply bg-primary text-white hover:bg-opacity-90;
+  @apply bg-[#FF8200] text-white hover:bg-opacity-90;
 }
 
 .button-secondary {
   @apply bg-gray-100 text-gray-600 hover:bg-gray-200;
+}
+
+.status-text {
+  @apply text-lg;
+}
+
+.status-active {
+  @apply text-green-600;
+}
+
+.status-paused {
+  @apply text-gray-600;
 }
