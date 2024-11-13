@@ -15,10 +15,22 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('dist'));
 
+// Add CSP headers
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
+  );
+  next();
+});
+
 // Proxy endpoint for call logs
 app.get('/api/calllogs', async (req, res) => {
   try {
     console.log('Fetching call logs...');
+    const startDate = new Date('2024-01-01T00:00:00Z').toISOString();
+    const endDate = new Date('2024-11-12T23:59:59Z').toISOString();
+
     const response = await fetch(`${BASE_URL}/${ACCOUNT_ID}/calllogs/query`, {
       method: 'POST',
       headers: {
@@ -38,8 +50,8 @@ app.get('/api/calllogs', async (req, res) => {
         filter: {
           targetId: TARGET_ID,
           dateRange: {
-            start: "2024-01-01T00:00:00Z",
-            end: "2024-11-12T23:59:59Z"
+            start: startDate,
+            end: endDate
           }
         },
         sortBy: [
@@ -55,6 +67,16 @@ app.get('/api/calllogs', async (req, res) => {
       })
     });
 
+    console.log('API Request Body:', JSON.stringify({
+      filter: {
+        targetId: TARGET_ID,
+        dateRange: {
+          start: startDate,
+          end: endDate
+        }
+      }
+    }, null, 2));
+
     if (!response.ok) {
       console.error('API Error:', response.status, response.statusText);
       const text = await response.text();
@@ -63,7 +85,7 @@ app.get('/api/calllogs', async (req, res) => {
     }
 
     const data = await response.json();
-    console.log('Call logs fetched successfully');
+    console.log('Call logs fetched successfully:', data);
     res.json(data);
   } catch (error) {
     console.error('Error fetching call logs:', error);
@@ -71,23 +93,8 @@ app.get('/api/calllogs', async (req, res) => {
   }
 });
 
-// Proxy endpoint for updating target status
-app.post('/api/target/status', async (req, res) => {
-  try {
-    const { enabled } = req.body;
-    const response = await fetch(`${BASE_URL}/${ACCOUNT_ID}/targets/${TARGET_ID}`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `Token ${API_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ enabled })
-    });
-
-    if (!response.ok) {
-      console.error('API Error:', response.status, response.statusText);
-      const text = await response.text();
-      console.error('Response:', text);
+// Rest of the server code...
+error('Response:', text);
       throw new Error(`API error: ${response.status}`);
     }
 
