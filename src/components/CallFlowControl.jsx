@@ -1,8 +1,6 @@
-// src/components/CallFlowControl.jsx
 import { useState, useEffect } from 'react';
 import { updateTargetStatus } from '../services/ringbaApi';
-import logo from '../assets/400x120.png'; // Adjust the path if necessary
-import '../styles/CustomStyles.css'; // Custom CSS file for styles
+import '../styles/CustomStyles.css'; // Import your custom styles
 
 export default function CallFlowControl() {
   const [isActive, setIsActive] = useState(false);
@@ -53,7 +51,8 @@ export default function CallFlowControl() {
       </div>
 
       <div className="header">
-        <img src={logo} alt="ACA Health Insurance Portal Logo" className="logo" width="400" height="120" />
+        {/* Use the image from the public folder */}
+        <img src="/400x120.png" alt="ACA Health Insurance Portal Logo" className="logo" width="400" height="120" />
         <div className="time" id="currentTime"></div>
       </div>
 
