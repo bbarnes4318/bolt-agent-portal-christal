@@ -29,10 +29,48 @@ export async function updateTargetStatus(enabled) {
 
 export async function fetchCallLogs() {
   try {
-    const response = await fetch(`https://api.ringba.com/v2/${ACCOUNT_ID}/calllogs`, {
+    // First get the available columns
+    const columnsResponse = await fetch(`https://api.ringba.com/v2/${ACCOUNT_ID}/calllogs/columns`, {
       headers: {
         'Authorization': `Token ${API_TOKEN}`
       }
+    });
+
+    if (!columnsResponse.ok) {
+      throw new Error(`HTTP error! status: ${columnsResponse.status}`);
+    }
+
+    // Create the request for call logs
+    const response = await fetch(`https://api.ringba.com/v2/${ACCOUNT_ID}/calllogs/query`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Token ${API_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "columns": [
+          "callDt",
+          "buyer",
+          "targetName",
+          "inboundPhoneNumber",
+          "callLengthInSeconds",
+          "hasConverted",
+          "recordingUrl"
+        ],
+        "filter": {
+          "targetId": TARGET_ID
+        },
+        "sortBy": [
+          {
+            "column": "callDt",
+            "direction": "desc"
+          }
+        ],
+        "page": {
+          "size": 10,
+          "number": 1
+        }
+      })
     });
 
     if (!response.ok) {
@@ -40,7 +78,7 @@ export async function fetchCallLogs() {
     }
 
     const data = await response.json();
-    return data;
+    return data.calls || [];
   } catch (error) {
     console.error('Error fetching call logs:', error);
     throw error;
