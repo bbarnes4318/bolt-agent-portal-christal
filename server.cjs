@@ -97,23 +97,30 @@ app.get('/api/calllogs', async (req, res) => {
 app.post('/api/target/status', async (req, res) => {
   try {
     const { enabled } = req.body;
+    console.log(`Updating target status to: ${enabled ? 'ON' : 'OFF'}`);
+
     const response = await fetch(`${BASE_URL}/${ACCOUNT_ID}/targets/${TARGET_ID}`, {
       method: 'PATCH',
       headers: {
         'Authorization': `Token ${API_TOKEN}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ enabled })
+      body: JSON.stringify({
+        target: {
+          enabled: enabled
+        }
+      })
     });
 
     if (!response.ok) {
       console.error('API Error:', response.status, response.statusText);
       const text = await response.text();
       console.error('Response:', text);
-      throw new Error(`API error: ${response.status}`);
+      throw new Error(`Failed to update target status: ${response.statusText}`);
     }
 
     const data = await response.json();
+    console.log(`Target status updated successfully to: ${enabled ? 'ON' : 'OFF'}`);
     res.json(data);
   } catch (error) {
     console.error('Error updating target status:', error);
