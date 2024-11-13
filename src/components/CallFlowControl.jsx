@@ -18,9 +18,10 @@ export default function CallFlowControl({ isActive, onToggle }) {
         body: JSON.stringify({ enabled: newState })
       });
 
+      const data = await response.json();
+      
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update status');
+        throw new Error(data.error || 'Failed to update status');
       }
 
       onToggle(newState);

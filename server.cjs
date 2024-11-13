@@ -105,21 +105,19 @@ app.post('/api/target/status', async (req, res) => {
         'Authorization': `Token ${API_TOKEN}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        target: {
-          enabled: enabled
-        }
-      })
+      // Simplified request body - just send enabled status directly
+      body: JSON.stringify({ enabled })
     });
+
+    const responseText = await response.text();
+    console.log('Raw API Response:', responseText);
 
     if (!response.ok) {
       console.error('API Error:', response.status, response.statusText);
-      const text = await response.text();
-      console.error('Response:', text);
-      throw new Error(`Failed to update target status: ${response.statusText}`);
+      throw new Error(`Failed to update target status: ${responseText}`);
     }
 
-    const data = await response.json();
+    const data = responseText ? JSON.parse(responseText) : {};
     console.log(`Target status updated successfully to: ${enabled ? 'ON' : 'OFF'}`);
     res.json(data);
   } catch (error) {
