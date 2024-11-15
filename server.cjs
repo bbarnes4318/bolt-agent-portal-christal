@@ -6,7 +6,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const API_TOKEN = "09f0c9f0ce65fca7fd49064ab10d2bac546768a83f994109e4c7ff148297934dd40a060c15972a26959daf9e5d11ec27d5fcd55a123ee3fc5c1297b15efafd8c2d791d62cebe5c77232e80b8e44b54059313a1e37cc598a5d75245cc6e43e7e864e7ba91131e520c96fb55efeb13fe738b136fa9";
+const API_TOKEN = "09f0c9f0ce65fca7fd49064ab10d2bac546768a808933e19dfe71db57de11b7d531066b7b4f072abc7fcec112992cafb489008619fb80b8e93172b0a5ebfd3caffd4cf4584b64f7dc5b3508f24efa4847f189a9e47f28a399337a4dc6479527f6ddd6de97a27533b1746fa49d5113b5c996a57a2";
 const ACCOUNT_ID = "RAa6a071b5a752499d966c5695492b26a0";
 const TARGET_ID = "TA540227dd15a24f0ab2ad5453ac8fc5cb"; // Correct TARGET_ID
 const BASE_URL = "https://api.ringba.com/v2";
